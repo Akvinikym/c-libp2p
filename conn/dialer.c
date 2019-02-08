@@ -31,8 +31,6 @@ struct Dialer* libp2p_conn_dialer_new(struct Libp2pPeer* peer, struct Peerstore*
 		dialer->peerstore = peerstore;
 		dialer->private_key = rsa_private_key;
 		dialer->transport_dialers = NULL;
-		dialer->fallback_dialer = libp2p_conn_tcp_transport_dialer_new(dialer->peer_id, rsa_private_key);
-		dialer->swarm = swarm;
 		if (peer != NULL) {
 			dialer->peer_id = malloc(peer->id_size + 1);
 			memset(dialer->peer_id, 0, peer->id_size + 1);
@@ -40,6 +38,8 @@ struct Dialer* libp2p_conn_dialer_new(struct Libp2pPeer* peer, struct Peerstore*
 				strncpy(dialer->peer_id, peer->id, peer->id_size);
 			}
 		}
+		dialer->fallback_dialer = libp2p_conn_tcp_transport_dialer_new(dialer->peer_id, rsa_private_key);
+		dialer->swarm = swarm;
 		return dialer;
 	}
 	libp2p_conn_dialer_free(dialer);
